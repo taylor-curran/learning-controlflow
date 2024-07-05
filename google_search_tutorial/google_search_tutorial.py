@@ -1,7 +1,4 @@
 import warnings
-# from langchain_core._api import LangChainDeprecationWarning
-# warnings.filterwarnings("ignore", category=LangChainDeprecationWarning)
-
 from dotenv import load_dotenv
 import os
 from langchain_community.vectorstores import Chroma
@@ -17,6 +14,8 @@ class QuestionAnsweringSystem:
         # Set up environment variables for API keys
         load_dotenv()
         openai_api_key = os.getenv("OPENAI_API_KEY")
+        google_api_key = os.getenv("GOOGLE_API_KEY")
+        google_cse_id = os.getenv("GOOGLE_CSE_ID")
 
         os.environ["OPENAI_API_KEY"] = openai_api_key
         os.environ["USER_AGENT"] = "MyApp/1.0"
@@ -37,11 +36,12 @@ class QuestionAnsweringSystem:
             output_key="answer",
             return_messages=True,
         )
+
+        # Set up Google Custom Search
         self.google_search = GoogleSearchAPIWrapper(
-            google_api_key=None,
-            cse_id=os.getenv("GOOGLE_CSE_ID"),
-            service_account_path=os.getenv("GOOGLE_APPLICATION_CREDENTIALS"),
+            google_api_key=google_api_key, google_cse_id=google_cse_id
         )
+
         self.web_research_retriever = WebResearchRetriever.from_llm(
             vectorstore=self.vector_store,
             llm=self.chat_model,
