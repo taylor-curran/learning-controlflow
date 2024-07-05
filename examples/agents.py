@@ -33,5 +33,5 @@ technical_document = cf.Task(
     ),
 )
 
-with cf.instructions('No more than 5 sentences per document'):
+with cf.instructions("No more than 5 sentences per document"):
     technical_document.run()
