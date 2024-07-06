@@ -14,6 +14,7 @@ from langchain.chains import RetrievalQAWithSourcesChain
 # Suppress deprecation warnings
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 
+
 class QuestionAnsweringSystem:
     def __init__(self):
         # Set up environment variables for API keys
@@ -41,13 +42,12 @@ class QuestionAnsweringSystem:
             output_key="answer",
             return_messages=True,
         )
-        
+
         # Set up Google Custom Search
         self.google_search = GoogleSearchAPIWrapper(
-            google_api_key=google_api_key,
-            google_cse_id=google_cse_id
+            google_api_key=google_api_key, google_cse_id=google_cse_id
         )
-                
+
         self.web_research_retriever = WebResearchRetriever.from_llm(
             vectorstore=self.vector_store,
             llm=self.chat_model,
@@ -60,9 +60,10 @@ class QuestionAnsweringSystem:
     def answer_question(self, user_input_question):
         # Query the QA chain with the user input question
         result = self.qa_chain.invoke({"question": user_input_question})
-        
+
         # Return the answer and sources
         return result["answer"], result["sources"]
+
 
 if __name__ == "__main__":
     qa_system = QuestionAnsweringSystem()
