@@ -2,6 +2,9 @@ from pydantic import BaseModel, Field
 import controlflow as cf
 from typing import Union, List, Optional
 from prettify_my_stuff import pretty_print_employee_count
+from langchain_google_community import GoogleSearchAPIWrapper
+from dotenv import load_dotenv
+import os
 
 
 class EmployeeCount(BaseModel):
@@ -54,6 +57,14 @@ class EmployeeCount(BaseModel):
     )
 
 
+load_dotenv()
+google_api_key = os.getenv("GOOGLE_API_KEY")
+google_cse_id = os.getenv("GOOGLE_CSE_ID")
+
+google_search = GoogleSearchAPIWrapper(
+    google_api_key=google_api_key, google_cse_id=google_cse_id
+)
+
 researcher = cf.Agent(
     "Researcher",
     instructions=f"""
@@ -81,6 +92,7 @@ researcher = cf.Agent(
     15. Remember that your training data has a cutoff date, and you should factor this into your confidence ratings when real-time data is unavailable.
     16. In the absence of real-time data, clearly state that your information might be outdated and provide the approximate date of your most recent reliable data.
     """,
+    tools=[google_search],
 )
 
 
