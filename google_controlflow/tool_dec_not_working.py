@@ -4,6 +4,7 @@ import controlflow as cf
 from dotenv import load_dotenv
 import os
 from pydantic import BaseModel
+from controlflow import tool
 
 # Load environment variables from .env file
 load_dotenv()
@@ -21,21 +22,15 @@ class GoogleSearchArgs(BaseModel):
     query: str
 
 
-# Custom Tool Class to include args_schema
-class CustomTool(Tool):
-    args_schema = GoogleSearchArgs
-
-    def __init__(self, name: str, description: str, func: callable):
-        super().__init__(name=name, description=description, func=func)
-        self.args_schema = GoogleSearchArgs
-
-
-# Create a Tool instance for the Google Search
-google_search_tool = CustomTool(
+# Define the tool using the @tool decorator
+@tool(
     name="google_search",
     description="Search Google for recent results.",
-    func=google_search.run,
+    args_schema=GoogleSearchArgs,
 )
+def google_search_tool(query: str):
+    return google_search.run(query)
+
 
 # Create a research task using the Google Search tool
 research_task = cf.Task(

@@ -1,5 +1,6 @@
 from langchain_google_community import GoogleSearchAPIWrapper
 from langchain_core.tools import Tool
+import controlflow as cf
 from dotenv import load_dotenv
 import os
 
@@ -20,12 +21,12 @@ google_search_tool = Tool(
     func=google_search.run,
 )
 
-
-# Example function to use the Google Search tool directly
-def run_google_search(query):
-    result = google_search_tool.run(query)
-    print(f"Search result for '{query}': {result}")
-
+# Create a research task using the Google Search tool
+research_task = cf.Task(
+    "Research how many employees are in the Blackstone company",
+    tools=[google_search_tool],
+)
 
 if __name__ == "__main__":
-    run_google_search("Find Blackstone employee count")
+    result = research_task.run()
+    print(f"Research result: {result}")

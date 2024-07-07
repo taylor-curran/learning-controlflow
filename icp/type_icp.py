@@ -6,10 +6,7 @@ from prettify_my_stuff import pretty_print_employee_count
 
 class EmployeeCount(BaseModel):
     real_time_data_available: bool = Field(
-        description="Whether real-time data was available for this research"
-    )
-    data_as_of: str = Field(
-        description="The date of the most recent data used in this report"
+        description="Were you able to search this internet for information or did you need to do an educated guess based on your training data?"
     )
 
     total: Union[int, List[int]] = Field(
@@ -33,20 +30,6 @@ class EmployeeCount(BaseModel):
     )
     data_professionals_confidence_explanation: Optional[str] = Field(
         None, description="Explanation for data professionals count confidence rating"
-    )
-
-    growth_rate: Optional[float] = Field(
-        None, description="Annual growth rate as a percentage"
-    )
-    growth_rate_confidence: Optional[int] = Field(
-        None, ge=0, le=5, description="Confidence rating (0-5) for growth rate"
-    )
-    growth_rate_confidence_explanation: Optional[str] = Field(
-        None, description="Explanation for growth rate confidence rating"
-    )
-
-    industry_comparison: str = Field(
-        description="Comparison to industry average (e.g., 'above average', 'average', 'below average')"
     )
     sources: List[str] = Field(description="List of sources used")
     notes: Optional[str] = Field(
