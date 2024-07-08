@@ -18,7 +18,7 @@ def research_flow(company_name: str):
         """,
         tools=[google_search_tool],
         result_type=EmployeeCount,
-    ) # TODO: I want to log how many times to search tool was used
+    )  # TODO: I want to log how many times to search tool was used
 
     result = research_task.run()
     print(prettify(result))

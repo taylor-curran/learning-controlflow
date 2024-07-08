@@ -14,24 +14,6 @@ google_search = GoogleSearchAPIWrapper(
     google_api_key=google_api_key, google_cse_id=google_cse_id
 )
 
-
-# Define the Pydantic schema for the tool's arguments
-class GoogleSearchArgs(BaseModel):
-    query: str
-
-
-# Custom Tool Class to include args_schema
-class CustomTool(Tool):
-    args_schema = GoogleSearchArgs
-
-    def __init__(self, name: str, description: str, func: callable):
-        super().__init__(name=name, description=description, func=func)
-        self.args_schema = GoogleSearchArgs
-
-
-# Create a Tool instance for the Google Search
-google_search_tool = CustomTool(
-    name="google_search",
-    description="Search Google for recent results.",
-    func=google_search.run,
-)
+def run_google_search(query: str) -> str:
+    """Search Google for recent results."""
+    return google_search.run(query=query)

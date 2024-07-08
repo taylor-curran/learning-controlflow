@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from typing import Union, List, Optional
+from typing import Union, List, Optional, Dict
 
 
 class EmployeeCount(BaseModel):
@@ -33,3 +33,26 @@ class EmployeeCount(BaseModel):
     notes: Optional[str] = Field(
         None, description="Additional context or discrepancies"
     )
+
+# too much info in the objectives and too confusing information in the data models
+# use to get updated information -- write in the docstring of the function
+
+class DataStack(BaseModel):
+    tools: Dict[str, float] = Field(default_factory=dict)
+    primary_languages: List[str] = Field(default_factory=list)
+    cloud_providers: List[str]
+    data_warehouses: List[str]
+    other_notable_tech: List[str]
+    confidence_score: float  # Overall confidence in the data stack assessment (0-5)
+    latest_source_date: Optional[str]
+    notes: Optional[str] = None
+
+
+class ICPScore(BaseModel):
+    score: int = Field(..., ge=0, le=100)
+    employee_factor: float = Field(..., ge=0, le=1)
+    data_team_factor: float = Field(..., ge=0, le=1)
+    tech_stack_factor: float = Field(..., ge=0, le=1)
+    key_tools: List[str]
+    explanation: str
+    confidence: float = Field(..., ge=0, le=5)
