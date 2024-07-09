@@ -1,11 +1,6 @@
 import controlflow as cf
 from my_tools import run_google_search
-from my_types import (
-    TotalEmployeeCount,
-    DataStack,
-    ICPScore,
-    DataProfessionalCount
-)
+from my_types import TotalEmployeeCount, DataStack, ICPScore, DataProfessionalCount
 from my_prettify import prettify
 
 researcher = cf.Agent(
