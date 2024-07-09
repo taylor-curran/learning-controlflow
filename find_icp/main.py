@@ -1,6 +1,6 @@
 import controlflow as cf
 from my_tools import google_search_tool
-from my_types import EmployeeCount
+from archive.find_icp.my_types import EmployeeCount
 from my_prettify import prettify
 
 

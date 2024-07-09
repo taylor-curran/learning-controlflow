@@ -14,6 +14,7 @@ google_search = GoogleSearchAPIWrapper(
     google_api_key=google_api_key, google_cse_id=google_cse_id
 )
 
+
 def run_google_search(query: str) -> str:
     """Search Google for recent results."""
     return google_search.run(query=query)
