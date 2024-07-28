@@ -11,6 +11,7 @@ researcher = cf.Agent(
     tools=[run_google_search],
 )
 
+
 @cf.flow()
 def get_total_employee_count(company_name: str) -> TotalEmployeeCount:
     return cf.Task(
@@ -19,6 +20,7 @@ def get_total_employee_count(company_name: str) -> TotalEmployeeCount:
         result_type=TotalEmployeeCount,
     )
 
+
 @cf.flow()
 def get_data_professional_count(company_name: str) -> DataProfessionalCount:
     return cf.Task(
@@ -26,6 +28,7 @@ def get_data_professional_count(company_name: str) -> DataProfessionalCount:
         agents=[researcher],
         result_type=DataProfessionalCount,
     )
+
 
 @cf.flow()
 def get_data_stack(company_name: str) -> DataStack:
@@ -40,8 +43,14 @@ def get_data_stack(company_name: str) -> DataStack:
         """,
     )
 
+
 @cf.flow()
-def calculate_icp_score(company_name: str, employee_count: TotalEmployeeCount, data_professional_count: DataProfessionalCount, data_stack: DataStack) -> ICPScore:
+def calculate_icp_score(
+    company_name: str,
+    employee_count: TotalEmployeeCount,
+    data_professional_count: DataProfessionalCount,
+    data_stack: DataStack,
+) -> ICPScore:
     return cf.Task(
         objective=f"""Determine the Ideal Customer Profile (ICP) score for {company_name} on a scale of 0-100:
         - Consider the total number of employees, size of the data team, and the company's tech stack.
@@ -60,14 +69,18 @@ def calculate_icp_score(company_name: str, employee_count: TotalEmployeeCount, d
         result_type=ICPScore,
     )
 
+
 @cf.flow()
 def research_flow_parent(company_name: str):
     total_employee_count = get_total_employee_count(company_name)
     data_professional_count = get_data_professional_count(company_name)
     data_stack = get_data_stack(company_name)
-    icp_score = calculate_icp_score(company_name, total_employee_count, data_professional_count, data_stack)
+    icp_score = calculate_icp_score(
+        company_name, total_employee_count, data_professional_count, data_stack
+    )
     return icp_score
 
+
 if __name__ == "__main__":
-    company_name = "Blackstone"
+    company_name = "Fidelity Investments"
     research_flow_parent(company_name)
