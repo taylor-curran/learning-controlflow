@@ -1,11 +1,13 @@
-from prefect import task, flow
-from datetime import date, timedelta
-import pandas as pd
-from io import StringIO
-from pydantic import BaseModel
-from prefect.tasks import task_input_hash, exponential_backoff
-import time
 import random
+import time
+from datetime import timedelta
+from io import StringIO
+
+import pandas as pd
+from prefect import flow, task
+from prefect.tasks import exponential_backoff, task_input_hash
+from pydantic import BaseModel
+from snowflake_blocks import SnowflakeConnection  # Import the custom block
 
 
 class SalesforceLead(BaseModel):
@@ -22,14 +24,15 @@ class SalesforceLead(BaseModel):
 
 @task(retries=3, retry_delay_seconds=exponential_backoff(backoff_factor=2))
 def fetch_salesforce_data():
-    # Simulated hardcoded Salesforce data
-    data = """
+    time.sleep(random.uniform(2, 3))
+    snowflake_conn = SnowflakeConnection.load("my-snowflake-conn")
+    data = snowflake_conn.read_sql("SELECT * FROM salesforce.leads")
+    data_restructured = """
     Lead,Title,Company,Email,Phone,Lead Status,Lead Owner,Industry,Annual Revenue
     John Doe,Lead Software Developer,TechCorp,john.doe@techcorp.com,,Nurture,Shane Nordstrand,oil & energy,5000000
     Jane Smith,Software Engineer,InnoTech,jane.smith@innotech.com,555-1234,Nurture,Shane Nordstrand,software,12000000
     """
-    time.sleep(random.uniform(1, 3))
-    return data
+    return data_restructured
 
 
 @task(cache_key_fn=task_input_hash, cache_expiration=timedelta(days=30))
@@ -69,7 +72,7 @@ def save_to_database(df):
 def salesforce_data_pipeline():
     raw_data = fetch_salesforce_data()
     df = convert_csv_to_df(raw_data)
-    enriched_df = enrich_data.submit(df)
+    enriched_df = enrich_data(df)
     analysis_result = analyze_data(enriched_df)
 
     print(f"Analysis Result:\n{analysis_result}")
@@ -80,4 +83,5 @@ def salesforce_data_pipeline():
 
 
 if __name__ == "__main__":
+    salesforce_data_pipeline()
     salesforce_data_pipeline()
