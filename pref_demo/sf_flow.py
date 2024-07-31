@@ -1,7 +1,8 @@
 import random
 import time
-from datetime import timedelta
+from datetime import timedelta, datetime
 from io import StringIO
+from typing import List, Union
 
 import pandas as pd
 from prefect import flow, task
@@ -12,18 +13,7 @@ from artifacts import (
     create_enriched_data_artifact,
     create_analysis_artifact,
 )  # Import the artifact functions
-
-
-class SalesforceLead(BaseModel):
-    name: str
-    title: str
-    company: str
-    email: str
-    phone: str
-    lead_status: str
-    lead_owner: str
-    industry: str
-    annual_revenue: int
+from my_classes import SalesforceLead
 
 
 @task(retries=3, retry_delay_seconds=exponential_backoff(backoff_factor=2))
@@ -81,7 +71,12 @@ def save_to_database(df):
 
 
 @flow(persist_result=True)
-def salesforce_data_pipeline():
+def salesforce_data_pipeline(
+    start_date: datetime = datetime(2023, 1, 1),
+    report_type: Union[str, List[str]] = ["mql", "detailed"]
+):
+    print(f"Flow started with start_date: {start_date} and report_type: {report_type}")
+
     raw_data = fetch_salesforce_data()
     df = convert_csv_to_df(raw_data)
     enriched_df = enrich_data(df)
@@ -95,13 +90,15 @@ def salesforce_data_pipeline():
 
 
 if __name__ == "__main__":
-    # salesforce_data_pipeline()
+    # Run the flow with default parameters
+    salesforce_data_pipeline()
 
-    salesforce_data_pipeline.deploy(
-        name="Salesforce Data Pipeline",
-        work_pool_name="Demo-ECS",
-        tags=["salesforce", "data-pipeline"],
-        image="taycurran/sf-prefect-demo:latest",
-        cron="0 0 * * *",
-        triggers=[],
-    )
+    # Deploy the flow
+    # salesforce_data_pipeline.deploy(
+    #     name="Salesforce Data Pipeline",
+    #     work_pool_name="Demo-ECS",
+    #     tags=["salesforce", "data-pipeline"],
+    #     image="taycurran/sf-prefect-demo:latest",
+    #     cron="0 0 * * *",
+    #     triggers=[],
+    # )
