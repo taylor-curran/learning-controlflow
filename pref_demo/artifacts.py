@@ -2,17 +2,16 @@
 from prefect.artifacts import create_markdown_artifact
 
 def create_enriched_data_artifact(df):
-    enriched_markdown_report = f"""
-    # Enriched Data Report
+    enriched_markdown_report = f"""# Enriched Data Report
 
-    ## Summary
+## Summary
 
-    Data has been enriched with the 'Lead Quality' column.
+Data has been enriched with the 'Lead Quality' column.
 
-    ## Enriched Data (sample)
+## Enriched Data (sample)
 
-    {df.head().to_markdown(index=False)}
-    """
+{df.head().to_markdown(index=False)}
+"""
     create_markdown_artifact(
         key="enriched-data-report",
         markdown=enriched_markdown_report,
@@ -20,17 +19,16 @@ def create_enriched_data_artifact(df):
     )
 
 def create_analysis_artifact(analysis_result):
-    analysis_markdown_report = f"""
-    # Analysis Report
+    analysis_markdown_report = f"""# Analysis Report
 
-    ## Summary
+## Summary
 
-    Analysis of leads by industry.
+Analysis of leads by industry.
 
-    ## Industry Counts
+## Industry Counts
 
-    {analysis_result.to_markdown()}
-    """
+{analysis_result.to_markdown()}
+"""
     create_markdown_artifact(
         key="analysis-report",
         markdown=analysis_markdown_report,
