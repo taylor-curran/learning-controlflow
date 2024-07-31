@@ -8,7 +8,10 @@ from prefect import flow, task
 from prefect.tasks import exponential_backoff, task_input_hash
 from pydantic import BaseModel
 from snowflake_blocks import SnowflakeConnection  # Import the custom block
-from artifacts import create_enriched_data_artifact, create_analysis_artifact  # Import the artifact functions
+from artifacts import (
+    create_enriched_data_artifact,
+    create_analysis_artifact,
+)  # Import the artifact functions
 
 
 class SalesforceLead(BaseModel):
@@ -48,10 +51,10 @@ def analyze_data(df):
     # Simple analysis: Count the number of leads by industry
     industry_counts = df["Industry"].value_counts()
     time.sleep(random.uniform(1, 2))
-    
+
     # Create a Markdown artifact after data analysis
     create_analysis_artifact(industry_counts)
-    
+
     return industry_counts
 
 
@@ -62,10 +65,10 @@ def enrich_data(df):
         lambda x: "High" if x > 10000000 else "Medium"
     )
     time.sleep(random.uniform(3, 5))
-    
+
     # Create a Markdown artifact after data enrichment
     create_enriched_data_artifact(df)
-    
+
     return df
 
 
@@ -92,6 +95,13 @@ def salesforce_data_pipeline():
 
 
 if __name__ == "__main__":
-    salesforce_data_pipeline()
+    # salesforce_data_pipeline()
 
-    #salesforce_data_pipeline
+    salesforce_data_pipeline.deploy(
+        name="Salesforce Data Pipeline",
+        work_pool_name="Demo-ECS",
+        tags=["salesforce", "data-pipeline"],
+        image="taycurran/sf-prefect-demo:latest",
+        cron="0 0 * * *",
+        triggers=[],
+    )

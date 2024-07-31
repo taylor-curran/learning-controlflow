@@ -1,6 +1,7 @@
 # artifacts.py
 from prefect.artifacts import create_markdown_artifact
 
+
 def create_enriched_data_artifact(df):
     enriched_markdown_report = f"""# Enriched Data Report
 
@@ -17,6 +18,7 @@ Data has been enriched with the 'Lead Quality' column.
         markdown=enriched_markdown_report,
         description="Report after enriching data with Lead Quality column.",
     )
+
 
 def create_analysis_artifact(analysis_result):
     analysis_markdown_report = f"""# Analysis Report
