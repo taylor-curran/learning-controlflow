@@ -162,3 +162,5 @@ cython_debug/
 #.idea/
 
 prefect-sbx-taylorcurran-b99f0cbf2f74.json
+
+google-cloud-cli-darwin-arm.tar.gz
