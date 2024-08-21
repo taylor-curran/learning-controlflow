@@ -29,14 +29,14 @@ def fetch_salesforce_data():
     return data_restructured
 
 
-@task(cache_key_fn=task_input_hash, cache_expiration=timedelta(days=30))
+@task(cache_key_fn=task_input_hash, cache_expiration=timedelta(days=1))
 def convert_csv_to_df(csv_data):
     df = pd.read_csv(StringIO(csv_data))
     time.sleep(random.uniform(2, 4))
     return df
 
 
-@task
+@task(retries=4)
 def analyze_data(df):
     # Simple analysis: Count the number of leads by industry
     industry_counts = df["Industry"].value_counts()
@@ -73,10 +73,9 @@ def save_to_database(df):
 @flow(persist_result=True)
 def salesforce_data_pipeline(
     start_date: datetime = datetime(2023, 1, 1),
-    report_type: Union[str, List[str]] = ["mql", "detailed"]
+    report_type: Union[str, List[str]] = ["mql", "detailed"],
 ):
     print(f"Flow started with start_date: {start_date} and report_type: {report_type}")
-
     raw_data = fetch_salesforce_data()
     df = convert_csv_to_df(raw_data)
     enriched_df = enrich_data(df)
@@ -95,10 +94,9 @@ if __name__ == "__main__":
 
     # Deploy the flow
     # salesforce_data_pipeline.deploy(
-    #     name="Salesforce Data Pipeline",
+    #     name="DEV Salesforce Data Pipeline",
     #     work_pool_name="Demo-ECS",
     #     tags=["salesforce", "data-pipeline"],
     #     image="taycurran/sf-prefect-demo:latest",
-    #     cron="0 0 * * *",
     #     triggers=[],
     # )

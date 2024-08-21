@@ -1,0 +1,48 @@
+
+# generic metadata
+prefect-version: null
+name: null
+
+# preparation steps
+build: null
+push: null
+
+# runtime steps
+pull: null
+
+# deployment configurations
+deployments:
+- # base metadata
+    name: my-prod-dbt
+    schedule: null
+
+    # flow-specific fields
+    entrypoint: null
+    parameters:
+      name: lab-job
+      dbtTarget: lab
+      dbtCommands:
+        - run
+        - test
+      dbtSelect:
+        - tag:finance
+        - tag:daily
+      environment: lab
+      run_montecarlo: false
+      branch: main
+      notifications:
+        - email: [email protected]
+        - slack: #dbt-alerts
+
+    # infra-specific fields
+    work_pool:
+    name: null
+    work_queue_name: null
+    job_variables: {}
+
+
+
+    
+
+    
+

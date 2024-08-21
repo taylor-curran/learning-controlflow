@@ -7,7 +7,7 @@ from my_prettify import prettify
 # zoominfo = company size, revenue, description -- how they make money, purpose, industry
 # Links to articles discussing funding rounds
 
-# SF account update script 
+# SF account update script
 
 # SF
 # Event in sales force - New Lead Created (Different types of leads depending on the source)
@@ -36,7 +36,6 @@ researcher = cf.Agent(
     """,
     tools=[run_google_search],
 )
-
 
 
 @cf.flow()

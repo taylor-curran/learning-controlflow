@@ -1,0 +1,8 @@
+pull:
+  - prefect.deployments.steps.git_clone:
+      repository: https://github.com/Cloud-3-0-EMU/prefect-data-platform.git
+      credentials: "{{ ... }}"
+      branch: "main"
+  - prefect.deployments.steps.set_working_directory:
+      directory: /opt/prefect/prefect-data-platform-main/prefect_data_platform/applications/corporate_information_technology_core_data_platform/
+feature/ado-testing-code

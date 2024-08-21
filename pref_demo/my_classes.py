@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class SalesforceLead(BaseModel):
     name: str
     title: str
